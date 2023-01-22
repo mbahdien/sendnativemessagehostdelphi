@@ -1,0 +1,87 @@
+program nativemessage;
+
+{$APPTYPE CONSOLE}
+
+uses
+  SysUtils,System.Classes,Winapi.Windows,Vcl.Dialogs,Data.DBXJSON,
+  UstreamIO in 'UstreamIO.pas';
+  var inputStream,outputStream:THandleStream;
+ fileoutput:string;
+  txtinput,action:String;
+
+  strstream:TMemoryStream;
+     input,outputstr:String;
+   jsInput,jsoutput:TJSONObject;
+    odialog:TOpenDialog;
+    jspair:TJSONPair;
+    jsval:TJSONString;
+begin
+  fileoutput:=ExtractFilePath(ParamStr(0))+'ouputstream.txt';
+     InputStream := THandleStream.Create(GetStdHandle(STD_INPUT_HANDLE));
+     try
+     try
+          input:=getInput(inputStream);
+
+              jsinput:=TJSONObject.ParseJSONValue(input) as TJSONObject;
+
+       if jsInput<>nil then
+       begin
+       OutputStream:=THandleStream.Create(GetStdHandle(STD_OUTPUT_HANDLE));
+       try
+          action:=jsInput.Get('action').JsonValue.Value;
+          jsoutput:=TJSONObject.Create;
+          if action='browse' then
+          begin
+                 odialog:=TOpenDialog.Create(nil);
+                 try
+                    if odialog.Execute then
+                    begin
+                      jsoutput.AddPair('filename',getreplaceJSON(odialog.FileName));
+                    end
+                    else
+                    jsoutput.AddPair('filename','');
+                 finally
+                   odialog.Free;
+                 end;
+          end
+          else if action='test' then
+               begin
+
+                     txtinput:=getReplaceJSON(jsInput.Get('txt').JsonValue.Value);
+                  jsoutput.AddPair('txt',txtinput);
+                 
+
+
+
+
+
+               end;
+              SetOutput(jsoutput,outputstream);
+
+           finally
+               OutputStream.Free;
+          end;
+
+       end
+       else
+       begin
+         showmessage('Cant parse json '+input);
+       end;
+
+
+
+
+
+     finally
+      inputStream.Free;
+   halt;
+     end;
+     except
+      on E:exception do
+      begin
+            ShowMessage(e.message)
+
+      end;
+     end;
+  { TODO -oUser -cConsole Main : Insert code here }
+end.

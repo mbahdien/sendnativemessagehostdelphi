@@ -1,0 +1,7 @@
+{ 
+"name": "com.anashidayat.sendnative",
+"description": "Test Send Native",
+"path": "E:\\Data\\programgarapan\\NodeJS\\testSetNativeMessage\\nativemessage\\nativemessage.exe",
+"type": "stdio",
+"allowed_origins": ["chrome-extension://dhnhhnpdfadllclbfbjlobeheihledki/"]
+}
